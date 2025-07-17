@@ -19,18 +19,14 @@
 eval $(ssh-agent -s)
 ssh-add ~/.ssh/id_rsa
 
-# TODO:
-# Use fping to check if remote is up or not
-#   fping `echo $1 |cut -d@ -f2`
-# returns 0 if host is alive, otherwise 1, so:
-#   if[[!$?]]; then
-#     host is up
-
 while true; do
-  content=$(xsel -ob)
-  if [[ "$content" != "$prev_content" ]]; then
-    echo "$content" | ssh -Y $1 "xsel --display $DISPLAY -ib"
-    prev_content="$content"
+  fping `echo $1 |cut -d@ -f2`  # get remote hostname and set reutrn code with fping
+  if [[ "$?" ==  "0" ]]; then   # if 0 then it is up
+    content=$(xsel -ob)
+    if [[ "$content" != "$prev_content" ]]; then
+      echo "$content" | ssh -Y $1 "xsel --display $DISPLAY -ib"
+      prev_content="$content"
+    fi
   fi
   sleep 1
 done
