@@ -19,7 +19,12 @@
 eval $(ssh-agent -s)
 ssh-add ~/.ssh/id_rsa
 
-# Loop
+# TODO:
+# Use fping to check if remote is up or not
+#   fping `echo $1 |cut -d@ -f2`
+# returns 0 if host is alive, otherwise 1, so:
+#   if[[!$?]]; then
+#     host is up
 
 while true; do
   content=$(xsel -ob)
